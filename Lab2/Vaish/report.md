@@ -1,0 +1,190 @@
+# Software Engineering Lab 2: Agile Backlog Creation & Sprint Simulation in Jira
+
+**Vaishnavi Goyal | PES2UG24CS571 | 5-J**
+**Telemedicine Slot Booking & Prescription Portal** (Problem Statement #11, Healthcare & Telemedicine)
+Jira project: Telemedicine Slot Booking Portal (`TSB`), a company-managed Scrum project.
+
+## 1. Scope and Source Requirements
+
+This lab converts the Lab 1 requirements for the Telemedicine Slot Booking & Prescription Portal
+into an Agile backlog and runs it through two sprints in Jira.
+
+| Lab 1 Req | Description | Priority | Backlog item |
+|---|---|---|---|
+| FR-001 | Physicians author and digitally sign structured prescriptions compiled into PDF records | High | TSB-12 |
+| FR-002 | Patients view slots by physician specialty and book a video consultation slot | High | TSB-4, TSB-5, TSB-6, TSB-7 |
+| FR-003 | Generate and securely deliver a unique tele-consultation room link per appointment | High | TSB-8, TSB-9, TSB-10 |
+| FR-004 | Physician accesses the patient record and submits a prescription after the consultation | High | TSB-11, TSB-12 |
+| FR-005 | Patients download digitally signed prescription records | Medium | TSB-13 |
+| NFR-001 | Session metadata and clinical notes encrypted in transit (TLS 1.3) and at rest (AES-256) | High | TSB-9 |
+| NFR-002 | Role-based access control over records, rooms and prescriptions | High | TSB-10, TSB-11 |
+
+## 2. Epics
+
+| Key | Epic | Covers | Requirements |
+|---|---|---|---|
+| TSB-1 | Appointment Booking | A patient finds a physician by specialty, books an open video consultation slot, and can move that booking if plans change. | FR-002 |
+| TSB-2 | Secure Consultation Room | Every confirmed appointment gets a unique room link, delivered to both participants and closed to everyone else. | FR-003, NFR-001, NFR-002 |
+| TSB-3 | Prescription Lifecycle | After the consultation the physician records it and issues a signed prescription the patient can download. | FR-001, FR-004, FR-005, NFR-002 |
+
+## 3. User Stories, Story Points and Priority
+
+| Key | Epic | User Story | Priority | Points | Traces to |
+|---|---|---|---|---|---|
+| TSB-4 | TSB-1 | **Browse specialties and available slots** — As a patient, I want to browse physicians by specialty and see the consultation slots they have open, so that I can find an appointment that fits my schedule. | High | 3 | FR-002 |
+| TSB-5 | TSB-1 | **Book a video consultation slot** — As a patient, I want to select an open slot and confirm the booking, so that my consultation is reserved with a specific physician and time. | High | 5 | FR-002 |
+| TSB-6 | TSB-1 | **Prevent double-booking of a slot** — As a patient, I want the system to re-check availability at the moment I confirm and refuse a slot someone else has taken, so that two patients are never booked into the same consultation. | High | 5 | FR-002 |
+| TSB-8 | TSB-2 | **Generate a unique consultation room link** — As a patient, I want a unique tele-consultation room to be created once my booking is confirmed, so that there is a private place for the consultation to happen. | High | 5 | FR-003 |
+| TSB-9 | TSB-2 | **Deliver the room link to both participants** — As an attending physician, I want the room link sent securely to me and to the patient, so that neither of us has to chase the other for it. | High | 3 | FR-003, NFR-001 |
+| TSB-10 | TSB-2 | **Restrict room access to booked participants** — As a patient, I want the consultation room to admit only the booked patient and the assigned physician, so that nobody else can join a private medical consultation. | High | 8 | FR-003, NFR-002 |
+| TSB-11 | TSB-3 | **Access the patient consultation record** — As an attending physician, I want to open the record of the patient I am consulting with, so that I can see their history before I prescribe anything. | High | 5 | FR-004, NFR-002 |
+| TSB-12 | TSB-3 | **Author and digitally sign a prescription** — As an attending physician, I want to write a structured prescription and sign it with my verified credentials, so that the prescription is legally attributable to me. | High | 8 | FR-001, FR-004 |
+| TSB-7 | TSB-1 | **Reschedule a booked consultation** — As a patient, I want to move a confirmed consultation to a different open slot, so that I do not have to cancel and rebook when my plans change. | Medium | 3 | FR-002 |
+| TSB-13 | TSB-3 | **Download a signed prescription PDF** — As a patient, I want to download the signed prescription for a completed consultation, so that I have a verifiable record I can take to a pharmacy. | Medium | 3 | FR-005 |
+
+**Total: 48 story points across 10 stories.**
+
+### Estimating with planning poker
+
+Story points measure relative effort, not hours. The Fibonacci scale is used because the gaps
+widen as the numbers grow, which stops a team arguing over a 6 against a 7 on work nobody
+understands well enough to separate. Each member reveals a card at the same time so nobody
+anchors on the loudest voice; where the cards disagree, the highest and lowest explain their
+reasoning and the round is re-run.
+
+Two stories came out at 8. TSB-10 is large because access control has to hold against a real
+attempt to join another patient's room, and TSB-12 because a signature has to be verifiable by a
+third party.
+
+### Prioritising and ranking the backlog
+
+Priority follows patient safety and privacy, not feature appeal. Unauthorised access to a
+consultation room or a clinical record is a privacy breach, so TSB-10 and TSB-11 sit at High
+alongside the core booking path.
+
+The backlog was then reordered so that rank matches priority: all eight High stories above the
+two Medium ones, dependency order preserved inside the High band, since a room cannot be secured
+before it can be generated. Both sprints pull from the top of that list. One consequence is that
+rescheduling and the prescription download are conveniences, so both sit at Medium and neither
+has been started.
+
+## 4. Sprint Execution
+
+Two sprints, one week each. Both were simulated: stories were moved To Do → In Progress → Done
+within a single session, so the sprint duration is one week while the recorded activity is
+compressed into minutes. This shows up in the shape of the burndown chart.
+
+### Sprint 1
+
+> **Goal:** A patient can find a physician by specialty, book a video consultation slot, and have
+> a room link reach both participants.
+
+| Key | Story | Points | Outcome |
+|---|---|---|---|
+| TSB-4 | Browse specialties and available slots | 3 | Done |
+| TSB-5 | Book a video consultation slot | 5 | Done |
+| TSB-6 | Prevent double-booking of a slot | 5 | Done |
+| TSB-8 | Generate a unique consultation room link | 5 | Done |
+| TSB-9 | Deliver the room link to both participants | 3 | Done |
+
+**Committed 21. Delivered 21.**
+
+The goal was met in full. A patient can browse specialties, book a slot without any risk of
+double-booking, and both participants receive the consultation room link before the appointment.
+Nothing carried over.
+
+### Sprint 2
+
+> **Goal:** Lock the consultation room down to its two participants and let the physician record
+> the consultation and issue a signed prescription.
+
+| Key | Story | Points | Outcome |
+|---|---|---|---|
+| TSB-10 | Restrict room access to booked participants | 8 | Done |
+| TSB-11 | Access the patient consultation record | 5 | Done |
+| TSB-12 | Author and digitally sign a prescription | 8 | **Blocked — carried over** |
+
+**Committed 21. Delivered 13.** TSB-12 was blocked, so no prescription can be signed and FR-001
+is still not met.
+
+### Progress comments
+
+Progress went into comments on the issues, not only into status changes, so the board carries the
+reasoning as well as the outcome. The comment that matters is on TSB-12, written once it was
+clear it would not finish:
+
+> *"Not finishing this sprint. The editor is complete, but signing depends on a certificate from
+> an external provider that the team does not control and did not request until after the sprint
+> had started. The 8 covered the work; it did not cover the wait. Carrying over, and the
+> dependency should have been raised at sprint planning."*
+
+### Position after two sprints
+
+| | Points | Stories |
+|---|---|---|
+| Delivered | 34 | 7 |
+| Remaining in backlog | 14 | 3 (TSB-12, TSB-7, TSB-13) |
+| **Total** | **48** | **10** |
+
+Velocity: **21, then 13.**
+
+## 5. Reflection
+
+### Did the estimations reflect the actual effort?
+
+For nine of the ten stories, yes. The booking-path 3s and 5s behaved as estimated, and TSB-10 at
+8 was correctly sized. TSB-12 is the interesting case, because the estimate was not wrong: eight
+points was a fair reading of the work, but the team did not control the signing certificate it
+depended on.
+
+Story points measure effort, not waiting. An external dependency has to be cleared before the
+story is committed.
+
+### Was the backlog well-prioritised?
+
+Largely. Priority followed safety and privacy, the backlog was ranked to match, and both sprints
+pulled from the top. The two privacy-critical stories, TSB-10 and TSB-11, are done, and the two
+untouched stories are both Medium conveniences.
+
+The gap is subtler. TSB-12 is the story that makes FR-001 real, and it is the one still
+outstanding. Ranking by impact says what matters most; it says nothing about what is most likely
+to fail. A risk column beside priority would have surfaced the external dependency before the
+sprint started.
+
+### How did the simulated sprint align with the plan?
+
+Sprint 1 aligned exactly: 21 committed, 21 delivered, goal met. Sprint 2 did not: 21 committed,
+13 delivered, goal missed with the largest story blocked.
+
+The second commitment was 21 because the first sprint had delivered 21, which felt like evidence.
+One clean sprint is a single data point, and 21 against 13 establishes no velocity yet.
+
+### What did the burndown chart show about capacity?
+
+The event log is where the burndown is legible:
+
+| Event | Burned | Remaining |
+|---|---|---|
+| Sprint start, 3 stories added | — | 21 |
+| TSB-10 completed | 8 | 13 |
+| TSB-11 completed | 5 | 8 |
+| Sprint ended | — | **8 (TSB-12 blocked)** |
+
+The line falls steeply and then stops flat at 8. That flat tail is the signal: work stopped moving
+entirely rather than slowing down.
+
+The plotted curve is compressed, and the reason matters. The To Do → In Progress → Done moves were
+all made inside one session, so every event lands in the first minutes of a seven-day axis rather
+than spreading across it, and the remaining-work line drops almost vertically instead of stepping
+down beside the guideline. That is an artifact of the simulation, not a property of the plan.
+
+In a real sprint that flat tail would be a warning sign, and here it was accurate: nothing the
+team did in the remaining time-box could have moved TSB-12.
+
+### What the team would take into the next sprint
+
+1. **Clear external dependencies before committing the story.** The TSB-12 certificate should have
+   been requested in Sprint 1.
+2. **Do not treat one clean sprint as a velocity.** Sprint 1 delivering 21 made 21 look safe for
+   Sprint 2, and the two together delivered 21 and 13.
+3. **Finish TSB-12 first.** FR-001 is the only High requirement still outstanding.

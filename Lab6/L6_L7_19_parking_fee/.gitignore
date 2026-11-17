@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Coverage and pytest
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.pytest_cache/
+
+# Virtual environments
+venv/
+.venv/
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store

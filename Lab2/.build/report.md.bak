@@ -1,0 +1,276 @@
+# SE Lab 2: Agile Backlog Creation & Sprint Simulation in Jira
+
+**Vaibhav .N** · PES University, Dept. of CSE
+**System:** Personalized Meal & Diet Subscription Manager (Problem Statement #19, Healthcare & Telemedicine)
+**Jira project:** Diet Subscription Manager (`DSM`) — company-managed Scrum project
+**Date:** 31 August 2026
+
+---
+
+## 1. Scope and Source Requirements
+
+Lab 1 produced a requirements table for the Personalized Meal & Diet Subscription Manager: a
+clinical dietary subscription service that generates weekly menus from patient metabolic
+constraints and tracks daily delivery fulfilment. This lab converts that requirements table into
+an Agile backlog and runs it through two sprints in Jira.
+
+The handout's worked example uses a Coffee Ordering Kiosk. Its instructions, however, say to
+review and reuse *your own* Lab 1 functional requirements, so the backlog below is built from the
+Lab 1 requirements table and every story carries a traceability note back to its `FR`/`NFR` ID.
+
+| Lab 1 Req | Description (abridged) | Priority | Where it lands in the backlog |
+|---|---|---|---|
+| FR-001 | Generate weekly plans within macro constraints and allergen exclusions | High | DSM-6, DSM-7 |
+| FR-002 | Create and update a health profile (allergens, calorie goal, carb limit) | High | DSM-4, DSM-5 |
+| FR-003 | Dietitian approves/rejects each plan, reason required on rejection | High | DSM-8, DSM-9 |
+| FR-004 | Pause/skip/reschedule a delivery; reject inside the 12-hour cut-off | High | DSM-10, DSM-11 |
+| FR-005 | Record delivery outcome with timestamp, visible to subscriber and dietitian | Medium | DSM-12 |
+| NFR-001 | Schedule modifications performant and authenticated up to the cut-off | High | DSM-11 |
+| NFR-002 | Health data encrypted at rest, access-controlled, audited | High | Constraint on DSM-4/DSM-5 |
+
+---
+
+## 2. Epics
+
+Three epics group the requirements into functional themes.
+
+| Key | Epic | What it covers | Requirements |
+|---|---|---|---|
+| DSM-1 | Health Profile & Meal Plan Generation | A subscriber records their medical dietary constraints and the system builds a compliant weekly menu from them. | FR-001, FR-002, NFR-002 |
+| DSM-2 | Dietitian Plan Review & Approval | No meal plan reaches a subscriber until a qualified dietitian has signed it off. | FR-003 |
+| DSM-3 | Delivery Scheduling & Fulfilment Tracking | Subscribers change upcoming deliveries within the kitchen's cut-off; the system records what was actually delivered. | FR-004, FR-005, NFR-001 |
+
+---
+
+## 3. User Stories, Story Points and Priority
+
+Nine user stories, all in the *As a / I want / So that* form.
+
+| Key | Epic | User Story | Priority | Points | Traces to |
+|---|---|---|---|---|---|
+| DSM-4 | DSM-1 | **Create health profile** — As a subscriber, I want to enter my allergen exclusions, daily calorie goal and carbohydrate limit, so that my meal plans are built around my medical constraints. | High | 5 | FR-002 |
+| DSM-6 | DSM-1 | **Generate weekly meal plan** — As a subscriber, I want the system to generate a 7-day menu from my saved profile, so that I do not have to plan meals for the week myself. | High | 8 | FR-001 |
+| DSM-7 | DSM-1 | **Block excluded allergens from a plan** — As a subscriber with a food allergy, I want the system to reject any recipe containing an allergen on my exclusion list, so that I am never served something unsafe. | High | 5 | FR-001 |
+| DSM-8 | DSM-2 | **View plans awaiting review** — As a dietitian, I want to see a queue of draft plans waiting on me, so that I can work through them before subscribers are left waiting. | High | 3 | FR-003 |
+| DSM-9 | DSM-2 | **Approve or reject a plan with a reason** — As a dietitian, I want to approve a draft plan, or reject it with a written reason, so that an unsafe plan is never released to the subscriber. | High | 5 | FR-003 |
+| DSM-10 | DSM-3 | **Skip or pause an upcoming delivery** — As a subscriber, I want to skip or pause a delivery that is already scheduled, so that I am not sent food I will not be there to eat. | High | 5 | FR-004 |
+| DSM-5 | DSM-1 | **Update health profile** — As a subscriber, I want to edit my allergens and calorie goal at any time, so that my plans stay correct when my diet changes. | Medium | 3 | FR-002 |
+| DSM-11 | DSM-3 | **Enforce the 12-hour change cut-off** — As a kitchen manager, I want schedule changes made less than 12 hours before dispatch to be refused, so that we do not waste food that has already been procured. | Medium | 3 | FR-004, NFR-001 |
+| DSM-12 | DSM-3 | **Record delivery outcome** — As a delivery agent, I want to mark each delivery as Delivered, Failed or Not Attempted with a timestamp, so that the subscriber and dietitian can see what actually arrived. | Medium | 3 | FR-005 |
+
+**Total backlog estimate: 40 story points across 9 stories.**
+
+### Estimating with planning poker
+
+Story points measure relative effort — complexity, volume of work, and uncertainty — not hours.
+The Fibonacci scale (1, 2, 3, 5, 8, 13 …) is used deliberately: the gaps widen as the numbers
+grow, which forces a decision rather than letting the team argue between a 6 and a 7 on work
+nobody understands well enough to separate.
+
+In a team setting each story would be read out, briefly discussed, and every member would reveal
+a card at the same time so that nobody anchors on the loudest voice. Where the cards agree the
+estimate is taken; where they diverge the two extremes explain their reasoning and the round is
+re-run. The point of the discussion is not to converge on a number but to surface the hidden
+assumption causing the spread — which is usually where the risk in the story is.
+
+Applying that here, DSM-6 is the only 8 in the backlog. Generating a weekly menu is not one
+operation: it is constraint solving over a recipe set, seven days of totals to balance, and a
+fallback path when no compliant menu exists. That uncertainty, not raw size, is what pushed it a
+full Fibonacci step above the 5s. The estimate is revisited in the reflection below, because
+DSM-6 is the story that did not finish.
+
+### Prioritising and ranking the backlog
+
+Priority was set on user impact rather than convenience: a requirement whose failure is a
+clinical safety incident outranks one whose failure is an inconvenience. That puts allergen
+exclusion (DSM-7) and dietitian approval (DSM-9) at High, and the fulfilment-record and cut-off
+stories at Medium.
+
+The backlog was then **reordered** so rank matches priority — all six High stories sit above the
+three Medium ones, with dependency order preserved inside each band (a profile must exist before
+a plan can be generated from it, and plans must exist before a dietitian can review them).
+Both sprints then pull from the top of that ranked list rather than cherry-picking, which is what
+makes the ranking meaningful rather than decorative.
+
+One consequence is visible in the plan: DSM-5 *Update health profile* is Medium, so it ranks
+below all six High stories and lands in Sprint 2 even though it belongs to the same epic as
+DSM-4, which shipped in Sprint 1.
+
+---
+
+## 4. Sprint Execution
+
+Two sprints were run, each with a one-week duration. Both were simulated: the stories were moved
+To Do → In Progress → Done inside the Jira board within a single session, so the calendar
+duration on the sprint is one week while the recorded activity is compressed into minutes. This
+is the simulation the lab asks for, and it is worth naming because it is visible in the shape of
+the burndown chart.
+
+### Sprint 1
+
+> **Goal:** A subscriber can set up a dietary profile and get a compliant weekly plan that a
+> dietitian can approve or reject.
+
+Sprint 1 took the top five stories off the ranked backlog.
+
+| Key | Story | Points | Outcome |
+|---|---|---|---|
+| DSM-4 | Create health profile | 5 | Done |
+| DSM-6 | Generate weekly meal plan | 8 | **Not completed — carried over** |
+| DSM-7 | Block excluded allergens from a plan | 5 | Done |
+| DSM-8 | View plans awaiting review | 3 | Done |
+| DSM-9 | Approve or reject a plan with a reason | 5 | Done |
+
+**Committed: 26 points. Delivered: 18 points. Carried over: 8 points.**
+
+The sprint goal was only partly met. Profile setup, allergen validation and the whole dietitian
+review path shipped — but the plan generation those pieces exist to serve did not, so at the end
+of Sprint 1 the dietitian had an empty review queue and there was nothing to approve.
+
+### Sprint 2
+
+> **Goal:** Finish weekly plan generation, let subscribers change an upcoming delivery, and allow
+> profile edits to flow into the next plan.
+
+| Key | Story | Points | Outcome |
+|---|---|---|---|
+| DSM-6 | Generate weekly meal plan (carried over) | 8 | Done |
+| DSM-10 | Skip or pause an upcoming delivery | 5 | Done |
+| DSM-5 | Update health profile | 3 | Done |
+
+**Committed: 16 points. Delivered: 16 points.**
+
+Sprint 2 was planned smaller than Sprint 1, taking the carry-over first and then continuing down
+the ranked backlog. The goal was met in full.
+
+### Progress comments
+
+Progress was recorded as comments on the Jira issues rather than only as status changes, so the
+board carries the reasoning and not just the outcome. Short working notes went on each story as
+it closed — for example, on DSM-7: *"Allergen exclusion check wired into the plan builder.
+Verified against the peanut case called out in FR-001."*
+
+The comment that matters is on DSM-6, written when it became clear it would not finish:
+
+> *"Not finishing this sprint. The generator builds a compliant single day, but balancing a full
+> week inside the calorie tolerance still fails on roughly one profile in four, and there is no
+> fallback yet for when no compliant menu exists. Carrying over to Sprint 2. In hindsight this
+> should have been split into three stories at planning rather than estimated as one 8."*
+
+That note is what makes the carry-over auditable at the retrospective instead of appearing as an
+unexplained slip.
+
+### Position at the end of two sprints
+
+| | Points | Stories |
+|---|---|---|
+| Delivered | 34 | 7 |
+| Remaining in backlog | 6 | 2 (DSM-11, DSM-12) |
+| **Total** | **40** | **9** |
+
+Velocity: **18 points, then 16 points.**
+
+---
+
+## 5. Reflection
+
+### Did the estimations reflect the actual effort?
+
+Mostly, with one clear miss. The 3s and 5s behaved as estimated — the profile story, the allergen
+check and the two dietitian stories were well understood and nothing surprising surfaced while
+working them. DSM-6 at 8 points was the exception, and it was under-estimated rather than
+mis-sized: the 8 was chosen to signal *"this one is uncertain"*, but the estimate still rested on
+an assumption that plan generation could be treated as a single story. It could not.
+
+It should have been split. Generating a candidate menu, balancing daily totals against the
+profile, and handling the case where no compliant menu exists are three separable pieces of work,
+and splitting them would have let part of the value land inside Sprint 1 instead of the whole
+story sliding. That is exactly what happened once it was split in Sprint 2, where it finished
+without difficulty.
+
+The lesson worth carrying forward is that a large Fibonacci number is a signal to split a story,
+not merely a label for a big one.
+
+### Was the backlog well-prioritised?
+
+Yes, and the outcome supports it. Priority followed user impact, the backlog was ranked to match,
+and both sprints pulled from the top of that ranking. The stories whose failure would be a
+clinical safety incident — allergen exclusion (DSM-7) and dietitian approval (DSM-9) — were High
+and shipped inside the first two sprints. The two stories still outstanding (DSM-11 cut-off
+enforcement, DSM-12 delivery-outcome recording) are both Medium. Nothing High is left undone.
+
+One ordering choice is arguable in hindsight. DSM-8, the dietitian's review queue, was pulled into
+Sprint 1 alongside the plan generation it depends on. When DSM-6 slipped, DSM-8 shipped into a
+system with no plans to review — three points of finished work that delivered no usable value
+until the following sprint. Ranking by impact is right; sequencing a dependent story into the
+same sprint as the work it depends on is a risk that should have been visible at planning time.
+
+### How did the simulated sprint align with the plan?
+
+Sprint 1 did not align: 26 points committed, 18 delivered, with the single largest story missing
+entirely. Sprint 2 aligned exactly — 16 committed, 16 delivered — but partly because it was
+planned *after* watching Sprint 1 miss, and was sized more conservatively with the carry-over
+taken first.
+
+That is the honest reading: the plan improved because the first sprint's failure informed it,
+which is the feedback loop Scrum exists to create. Two sprints is far too small a sample to call
+a stable velocity, but 18 and 16 are close enough to suggest a real capacity somewhere near 17
+points per sprint, against the 26 initially committed.
+
+### What did the burndown chart show about capacity?
+
+The Sprint 1 chart carries two readings, and the honest one needs both the plot and the event log
+beneath it.
+
+The event log is where the burndown is legible. Sprint 1 opened with scope building to 26 points,
+then stepped down as each story closed:
+
+| Event | Points burned | Remaining |
+|---|---|---|
+| Sprint start, all 5 stories added | — | 26 |
+| DSM-4 *Create health profile* completed | 5 | 21 |
+| DSM-7 *Block excluded allergens* completed | 5 | 16 |
+| DSM-8 *View plans awaiting review* completed | 3 | 13 |
+| DSM-9 *Approve or reject a plan* completed | 5 | 8 |
+| Sprint ended | — | **8 (DSM-6 unfinished)** |
+
+The line stops at 8 and never reaches the axis. That gap *is* the capacity finding: 26 points were
+committed and 8 were still open when the time-box expired, so the commitment ran roughly 44% above
+what was actually delivered.
+
+The plotted curve itself is less informative, and it is worth saying why rather than pretending
+otherwise. The sprint was given the one-week duration the handout asks for, but the To Do →
+In Progress → Done moves were all made inside a single lab session, so every event lands in the
+first few minutes of a seven-day axis and the remaining-work line renders as a near-vertical drop
+at the left edge instead of a staircase descending beside the grey guideline. That is an artifact
+of simulating a week's work in one sitting, not a property of the plan.
+
+The instructive part is that a real sprint showing this shape — nothing moving for most of the
+time-box, then everything closing at once — would be a genuine warning sign, and for one story it
+actually was. DSM-6 was too large to close incrementally, which is precisely the failure the
+handout describes as *"a sharp drop during the sprint … work has not been estimated accurately, or
+broken down properly."*
+
+Read together with the velocity figures, the practical conclusion is that 26 points was an
+over-commitment, and planning the next sprint around 16–18 points would be the defensible forecast.
+
+### What the team would take into the next sprint
+
+Three things, in order of how much they would change the outcome:
+
+1. **Split anything estimated at 8 or above before committing to it.** DSM-6 is the whole argument.
+2. **Do not put a story in the same sprint as the work it depends on** unless the dependency is
+   scheduled to finish early in that sprint. DSM-8 delivered nothing usable for a week.
+3. **Commit to about 17 points, not 26,** until there is enough velocity history to justify more.
+
+---
+
+## 6. Screenshots
+
+| # | Screenshot | Shows |
+|---|---|---|
+| 1 | `01-backlog-epics-stories.png` | Backlog with the epic panel open — 3 epics, 9 user stories, ranked High above Medium |
+| 2 | `02-story-points.png` | Story point assignments, with Sprint 1 rolling up to 26 points and the remaining backlog to 14 |
+| 3 | `03-active-sprint-board.png` | Active sprint board partway through Sprint 1 |
+| 4 | `04-burndown-chart.png` | Sprint 1 burndown chart with its event log (26 → 21 → 16 → 13 → 8) |
+| 5 | `05-issue-comments.png` | Progress comments on DSM-6, including the carry-over explanation |
